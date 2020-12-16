@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// InitConfig : init config
 func InitConfig() {
 	// load .env file
 	err := godotenv.Load(".env")
@@ -15,7 +16,7 @@ func InitConfig() {
 	}
 }
 
-// Config func to get env value
-func Config(key string) string {
+// GetConfig : Config func to get env value
+func GetConfig(key string) string {
 	return os.Getenv(key)
 }

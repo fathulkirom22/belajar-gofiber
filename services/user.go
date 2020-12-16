@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetUsers : geet all user
 func GetUsers(context *fiber.Ctx) error {
 	db := database.DBConn
 	var users []model.User
@@ -15,6 +16,7 @@ func GetUsers(context *fiber.Ctx) error {
 	return context.JSON(users)
 }
 
+// GetUser : get one user
 func GetUser(context *fiber.Ctx) error {
 	id := context.Params("id")
 	db := database.DBConn
@@ -26,6 +28,7 @@ func GetUser(context *fiber.Ctx) error {
 	return context.JSON(user)
 }
 
+// NewUser : cretae new user
 func NewUser(context *fiber.Ctx) error {
 	db := database.DBConn
 	user := new(model.User)
@@ -38,6 +41,7 @@ func NewUser(context *fiber.Ctx) error {
 	return context.JSON(user)
 }
 
+// DeleteUser : delete one user
 func DeleteUser(context *fiber.Ctx) error {
 	id := context.Params("id")
 	db := database.DBConn

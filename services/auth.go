@@ -2,7 +2,6 @@ package services
 
 import (
 	"belajar-fiber/blueprint"
-	"belajar-fiber/config"
 	"belajar-fiber/database"
 	"belajar-fiber/lang"
 	"belajar-fiber/model"
@@ -16,18 +15,21 @@ func checkPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-func getUserByEmail(email string) (*model.User, *blueprint.Error) {
+func getUserByEmail(user *model.User, email string) *blueprint.Error {
 	db := database.DBConn
-	var user model.User
+
 	if err := db.Where(&model.User{Email: email}).Find(&user).Error; err != nil {
-		return nil, blueprint.CreateError(500, err.Error())
+		return blueprint.CreateError(500, err.Error())
 	}
+
 	if user.Name == "" {
-		return nil, blueprint.CreateError(404, lang.DataNotFound)
+		return blueprint.CreateError(404, lang.DataNotFound)
 	}
-	return &user, nil
+
+	return nil
 }
 
+// Login ...
 func Login(context *fiber.Ctx) error {
 	type request struct {
 		Email    string `validate:"required"`
@@ -38,12 +40,15 @@ func Login(context *fiber.Ctx) error {
 	if err := context.BodyParser(&req); err != nil {
 		return context.Status(400).SendString(err.Error())
 	}
-	if user, err := getUserByEmail(req.Email); err != nil {
+
+	var user model.User
+	if err := getUserByEmail(&user, req.Email); err != nil {
 		return context.Status(err.Code).SendString(err.Error())
-	} else {
-		return context.JSON(fiber.Map{
-			"login": checkPasswordHash(req.Password, user.Password),
-			"test":  config.Config("JWT_SECRET"),
-		})
 	}
+
+	if !checkPasswordHash(req.Password, user.Password) {
+		return context.Status(401).SendString("Invalid password")
+	}
+
+	return context.SendString("Success login")
 }

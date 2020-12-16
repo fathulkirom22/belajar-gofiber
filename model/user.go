@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// User : user model structur
 type User struct {
 	gorm.Model
 	Name     string `json:"name" validate:"required"`
@@ -14,6 +15,7 @@ type User struct {
 	Password string `json:"password" validate:"required"`
 }
 
+// BeforeCreate : before inset user in database
 func (user *User) BeforeCreate(db *gorm.DB) (err error) {
 	if user.Password != "" {
 		hash, err := hashPassword(user.Password)

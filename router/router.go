@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// SetupRoutes ...
 func SetupRoutes(app *fiber.App) {
 
 	// Api group

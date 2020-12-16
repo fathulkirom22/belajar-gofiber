@@ -8,8 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
+// DBConn : object connetion database
 var DBConn *gorm.DB
 
+// ConnectDB ...
 func ConnectDB() {
 	var err error
 	DBConn, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
